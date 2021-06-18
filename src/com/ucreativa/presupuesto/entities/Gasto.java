@@ -1,16 +1,18 @@
 package com.ucreativa.presupuesto.entities;
 
+import java.util.Date;
+
 public class Gasto extends Transaccion {
 
     //region Declaraciones de Atributos.
     private TipoGasto tipoGasto;
-    private Double monto;
+    private double monto;
     private String descripcion;
     //endregion
 
     //region Creación de los Constructores.
-    public Gasto(TipoTransaccion pTipoTransaccion, TipoGasto pTipoGasto, Double pMonto, String pDescripcion) {
-        super(pTipoTransaccion);
+    public Gasto(Integer pId, Date pFecha, TipoTransaccion pTipoTransaccion, TipoGasto pTipoGasto, Double pMonto, String pDescripcion) {
+        super(pId, pFecha, pTipoTransaccion);
         this.tipoGasto = pTipoGasto;
         this.monto = pMonto;
         this.descripcion = pDescripcion;
