@@ -41,6 +41,7 @@ public class PresupuestoService {
     //region Metodos de la Clase
     public void inicializaMenuPrincipal() {
 
+        System.out.println();
         System.out.println("***** Menú Principal *****");
         System.out.println();
         System.out.println("Ingrese cualquier número entre 1 y 6");
@@ -95,7 +96,6 @@ public class PresupuestoService {
         //Seleccion 5.
         else if (iSeleccion == 5) {
             System.exit(0);
-            ;
         }
 
         //Ninguna opcion listada en el menu, imprimir error y volver a intentarlo.
@@ -473,60 +473,76 @@ public class PresupuestoService {
     private void imprimirTransacciones(TipoTransaccion pTipoTransaccion) {
         List<Transaccion> lstTransacciones = this.oRepository.leerDatos();
 
-        if (pTipoTransaccion == TipoTransaccion.INGRESO)
+        Integer iContador = 0;
+
+        if (!lstTransacciones.isEmpty())
         {
-            for (Transaccion oTransaccion : lstTransacciones) {
-                if (oTransaccion.getTipoTransaccion() == TipoTransaccion.INGRESO)
-                {
-                    Ingreso oIngreso = (Ingreso) oTransaccion;
+            if (pTipoTransaccion == TipoTransaccion.INGRESO) {
+                for (Transaccion oTransaccion : lstTransacciones) {
+                    if (oTransaccion.getTipoTransaccion() == TipoTransaccion.INGRESO) {
+                        Ingreso oIngreso = (Ingreso) oTransaccion;
 
-                    //Convertir fecha al formato deseado.
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    String tmpFecha = simpleDateFormat.format(oIngreso.getFecha());
+                        //Convertir fecha al formato deseado.
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String tmpFecha = simpleDateFormat.format(oIngreso.getFecha());
 
-                    System.out.println(oIngreso.getId() + "," + tmpFecha + "," + oIngreso.getTipoTransaccion() + "," + oIngreso.getMonto() + "," + oIngreso.getDescripcion());
+                        //Aumentar el contador.
+                        iContador = iContador + 1;
+
+                        System.out.println(oIngreso.getId() + "," + tmpFecha + "," + oIngreso.getTipoTransaccion() + "," + oIngreso.getMonto() + "," + oIngreso.getDescripcion());
+                    }
                 }
+            }
+
+            if (pTipoTransaccion == TipoTransaccion.GASTO) {
+                for (Transaccion oTransaccion : lstTransacciones) {
+                    if (oTransaccion.getTipoTransaccion() == TipoTransaccion.GASTO) {
+                        Gasto oGasto = (Gasto) oTransaccion;
+
+                        //Convertir fecha al formato deseado.
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String tmpFecha = simpleDateFormat.format(oGasto.getFecha());
+
+                        //Aumentar el contador.
+                        iContador = iContador + 1;
+
+                        System.out.println(oGasto.getId() + "," + tmpFecha + "," + oGasto.getTipoTransaccion() + "," + oGasto.getMonto() + "," + oGasto.getDescripcion());
+                    }
+                }
+            }
+            if (pTipoTransaccion == TipoTransaccion.TODAS) {
+                for (Transaccion oTransaccion : lstTransacciones) {
+                    if (oTransaccion.getTipoTransaccion() == TipoTransaccion.INGRESO) {
+                        Ingreso oIngreso = (Ingreso) oTransaccion;
+
+                        //Convertir fecha al formato deseado.
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String tmpFecha = simpleDateFormat.format(oIngreso.getFecha());
+
+                        System.out.println(oIngreso.getId() + "," + tmpFecha + "," + oIngreso.getTipoTransaccion() + "," + oIngreso.getMonto() + "," + oIngreso.getDescripcion());
+                    } else {
+                        Gasto oGasto = (Gasto) oTransaccion;
+
+                        //Convertir fecha al formato deseado.
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String tmpFecha = simpleDateFormat.format(oGasto.getFecha());
+
+                        //Aumentar el contador.
+                        iContador = iContador + 1;
+
+                        System.out.println(oGasto.getId() + "," + tmpFecha + "," + oGasto.getTipoTransaccion() + "," + oGasto.getMonto() + "," + oGasto.getDescripcion());
+                    }
+                }
+            }
+
+            if (iContador <= 0)
+            {
+                System.out.println("No existen transacciones almacenadas actualmente para mostrar...");
             }
         }
-
-        if (pTipoTransaccion == TipoTransaccion.GASTO)
+        else
         {
-            for (Transaccion oTransaccion : lstTransacciones) {
-                if (oTransaccion.getTipoTransaccion() == TipoTransaccion.GASTO)
-                {
-                    Gasto oGasto = (Gasto) oTransaccion;
-
-                    //Convertir fecha al formato deseado.
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    String tmpFecha = simpleDateFormat.format(oGasto.getFecha());
-
-                    System.out.println(oGasto.getId() + "," + tmpFecha + "," + oGasto.getTipoTransaccion() + "," + oGasto.getMonto() + "," + oGasto.getDescripcion());
-                }
-            }
-        }
-        if (pTipoTransaccion == TipoTransaccion.TODAS)
-        {
-            for (Transaccion oTransaccion : lstTransacciones) {
-                if (oTransaccion.getTipoTransaccion() == TipoTransaccion.INGRESO) {
-                    Ingreso oIngreso = (Ingreso) oTransaccion;
-
-                    //Convertir fecha al formato deseado.
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    String tmpFecha = simpleDateFormat.format(oIngreso.getFecha());
-
-                    System.out.println(oIngreso.getId() + "," + tmpFecha + "," + oIngreso.getTipoTransaccion() + "," + oIngreso.getMonto() + "," + oIngreso.getDescripcion());
-                }
-                else
-                {
-                    Gasto oGasto = (Gasto) oTransaccion;
-
-                    //Convertir fecha al formato deseado.
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    String tmpFecha = simpleDateFormat.format(oGasto.getFecha());
-
-                    System.out.println(oGasto.getId() + "," + tmpFecha + "," + oGasto.getTipoTransaccion() + "," + oGasto.getMonto() + "," + oGasto.getDescripcion());
-                }
-            }
+            System.out.println("No existen transacciones almacenadas actualmente para mostrar...");
         }
 
         //Regresar al menu principal.

@@ -15,6 +15,7 @@ import java.util.List;
 public class FileRepository implements Repository{
 
     //Declarar las variables para almacenar la ruta del archivo.
+    final String sKey = "abc123ghidef9123";
     private final Path root = Paths.get(".").normalize().toAbsolutePath();
     private final String FILE_PATH = root + "\\presupuestoDB.txt";
     private Ingreso oIngreso;
@@ -43,6 +44,10 @@ public class FileRepository implements Repository{
                              oIngreso.getTipoIngreso() + "," +
                              oIngreso.getMonto() + "," +
                              oIngreso.getDescripcion();
+
+                //Encriptar el string para que el mismo no pueda ser modificado desde el TXT
+                // y así no generar excepciones de parseo al leer el archivo.
+                txtContent = Encryptor.encrypt(sKey, "RandomInitVector", txtContent);
             }
             else
             {
@@ -54,6 +59,10 @@ public class FileRepository implements Repository{
                              oGasto.getTipoGasto() + "," +
                              oGasto.getMonto() + "," +
                              oGasto.getDescripcion();
+
+                //Encriptar el string para que el mismo no pueda ser modificado desde el TXT
+                // y así no generar excepciones de parseo al leer el archivo.
+                txtContent = Encryptor.encrypt(sKey, "RandomInitVector", txtContent);
             }
 
             //Declarar el lugar donde se guardará. Se accede al root de la solución
@@ -93,10 +102,13 @@ public class FileRepository implements Repository{
         //Leer la BD.
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
 
-            String sLine;
+            String sLine = "";
 
             while ((sLine = br.readLine()) != null)
             {
+                //Desencriptar el string almacenado en el TXT para su lectura interna.
+                sLine = Encryptor.decrypt(sKey, "RandomInitVector", sLine);
+
                 List<String> aLine = new ArrayList<String>(Arrays.asList(sLine.split(",")));
 
                 if (aLine.get(2).equals(TipoTransaccion.INGRESO.toString()))
