@@ -1,14 +1,12 @@
 #Presupuesto (Proyecto Final)
 Proyecto Final para la clase "Programación Orientada a Objetos en Java" 
 de la Universidad Creativa de Costa Rica.
-
 Alumno: David Manuel Ávila Fuentes, Cédula: 1-1440-0649
 
 
 ## Tabla de Contenidos
 * [Información General](#informacin-general)
 * [Tecnologías](#technologies)
-* [Instalación](#setup)
 
 ## Información General
 El proyecto consta de una aplicación escrita en Java para
