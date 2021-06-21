@@ -1,4 +1,4 @@
-#Presupuesto (Proyecto Final)
+# Presupuesto (Proyecto Final)
 Proyecto Final para la clase "Programación Orientada a Objetos en Java" 
 de la Universidad Creativa de Costa Rica.
 Alumno: David Manuel Ávila Fuentes, Cédula: 1-1440-0649
