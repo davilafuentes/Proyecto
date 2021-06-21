@@ -20,12 +20,12 @@ public class PresupuestoService {
     Scanner myScanner = new Scanner(System.in);
 
     //Variable que contiene la seleccion del usuario desde el menu.
-    int iSeleccion = 0;
+    private int iSeleccion = 0;
 
     //Variables para almacenar la información del User Input.
-    double inputMonto;
-    Date inputFecha;
-    String inputDescripcion;
+    private double inputMonto;
+    private Date inputFecha;
+    private String inputDescripcion;
     //endregion
 
     //region Creación de los Constructores.
@@ -51,7 +51,7 @@ public class PresupuestoService {
         ejecutaSeleccionPrincipal();
     }
 
-    public void ejecutaSeleccionPrincipal() {
+    private void ejecutaSeleccionPrincipal() {
 
         //Comprobar que la seleccion sea un numero entero.
         while (!myScanner.hasNextInt()) {
@@ -101,7 +101,7 @@ public class PresupuestoService {
         }
     }
 
-    public void inicializaMenuIngreso() {
+    private void inicializaMenuIngreso() {
         System.out.println("Seleccione el Tipo de Ingreso: ");
         System.out.println();
         System.out.println("1) Salario");
@@ -113,7 +113,7 @@ public class PresupuestoService {
         ejecutaSeleccionIngreso();
     }
 
-    public void ejecutaSeleccionIngreso() {
+    private void ejecutaSeleccionIngreso() {
         //Comprobar que la seleccion sea un numero entero.
         while (!myScanner.hasNextInt()) {
 
@@ -157,7 +157,7 @@ public class PresupuestoService {
         }
     }
 
-    public void generarIngreso(TipoIngreso pTipoIngreso) {
+    private void generarIngreso(TipoIngreso pTipoIngreso) {
         System.out.println("*Crear Ingreso*");
         System.out.println("");
 
@@ -197,7 +197,7 @@ public class PresupuestoService {
 
     }
 
-    public void inicializaMenuGasto() {
+    private void inicializaMenuGasto() {
         System.out.println("Seleccione el Tipo de Gasto: ");
         System.out.println();
         System.out.println("1) Personal");
@@ -211,7 +211,7 @@ public class PresupuestoService {
         ejecutaSeleccionGasto();
     }
 
-    public void ejecutaSeleccionGasto() {
+    private void ejecutaSeleccionGasto() {
         //Comprobar que la seleccion sea un numero entero.
         while (!myScanner.hasNextInt()) {
 
@@ -265,7 +265,7 @@ public class PresupuestoService {
         }
     }
 
-    public void generarGasto(TipoGasto pTipoGasto) {
+    private void generarGasto(TipoGasto pTipoGasto) {
         System.out.println("*Crear Gasto*");
         System.out.println("");
 
@@ -304,7 +304,7 @@ public class PresupuestoService {
         this.oRepository.guardarTransaccion(oGasto);
     }
 
-    public void inicializaMenuGrafico() {
+    private void inicializaMenuGrafico() {
         System.out.println("Seleccione una opción: ");
         System.out.println();
         System.out.println("1) Generar Gráfico Circular");
@@ -315,7 +315,7 @@ public class PresupuestoService {
         ejecutaSeleccionGrafico();
     }
 
-    public void inicializaMenuImpresion() {
+    private void inicializaMenuImpresion() {
         System.out.println("Seleccione una opción: ");
         System.out.println();
         System.out.println("1) Imprimir Ingresos");
@@ -328,7 +328,7 @@ public class PresupuestoService {
         ejecutaSeleccionImpresion();
     }
 
-    public void ejecutaSeleccionImpresion() {
+    private void ejecutaSeleccionImpresion() {
         //Comprobar que la seleccion sea un numero entero.
         while (!myScanner.hasNextInt()) {
 
@@ -377,7 +377,7 @@ public class PresupuestoService {
         }
     }
 
-    public void ejecutaSeleccionGrafico() {
+    private void ejecutaSeleccionGrafico() {
         //Comprobar que la seleccion sea un numero entero.
         while (!myScanner.hasNextInt()) {
 
@@ -416,7 +416,7 @@ public class PresupuestoService {
         }
     }
 
-    public void generarGrafico() {
+    private void generarGrafico() {
         Date dFechaInicialReporte;
         Date dFechaFinalReporte;
 
@@ -453,7 +453,7 @@ public class PresupuestoService {
         } else {
             //Inicializar la clase para la generación del gráfico circular.
             GeneradorDeGrafico oGeneradorReportes = new GeneradorDeGrafico(dFechaInicialReporte, dFechaFinalReporte);
-            oGeneradorReportes.GenerarGraficoCircular();
+            oGeneradorReportes.generarGraficoCircular();
         }
     }
 

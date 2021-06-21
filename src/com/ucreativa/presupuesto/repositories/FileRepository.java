@@ -47,7 +47,7 @@ public class FileRepository implements Repository{
 
                 //Encriptar el string para que el mismo no pueda ser modificado desde el TXT
                 // y así no generar excepciones de parseo al leer el archivo.
-                txtContent = Encryptor.encrypt(sKey, "RandomInitVector", txtContent);
+                txtContent = Encryptor.encriptar(sKey, "RandomInitVector", txtContent);
             }
             else
             {
@@ -62,7 +62,7 @@ public class FileRepository implements Repository{
 
                 //Encriptar el string para que el mismo no pueda ser modificado desde el TXT
                 // y así no generar excepciones de parseo al leer el archivo.
-                txtContent = Encryptor.encrypt(sKey, "RandomInitVector", txtContent);
+                txtContent = Encryptor.encriptar(sKey, "RandomInitVector", txtContent);
             }
 
             //Declarar el lugar donde se guardará. Se accede al root de la solución
@@ -115,7 +115,7 @@ public class FileRepository implements Repository{
             while ((sLine = br.readLine()) != null) {
 
                 //Desencriptar el string almacenado en el TXT para su lectura interna.
-                sLine = Encryptor.decrypt(sKey, "RandomInitVector", sLine);
+                sLine = Encryptor.desencriptar(sKey, "RandomInitVector", sLine);
 
                 List<String> aLine = new ArrayList<String>(Arrays.asList(sLine.split(",")));
 

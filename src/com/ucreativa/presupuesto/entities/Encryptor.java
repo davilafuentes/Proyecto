@@ -8,7 +8,7 @@ import org.apache.commons.codec.binary.Base64;
 
 public class Encryptor {
 
-    public static String encrypt(String key, String initVector, String value) {
+    public static String encriptar(String key, String initVector, String value) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -26,7 +26,7 @@ public class Encryptor {
         return null;
     }
 
-    public static String decrypt(String key, String initVector, String encrypted) {
+    public static String desencriptar(String key, String initVector, String encrypted) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");

@@ -25,7 +25,7 @@ public class GeneradorDeGrafico {
         this.dFechaFinal = pFechaFinal;
     }
 
-    public void GenerarGraficoCircular()
+    public void generarGraficoCircular()
     {
 
         //Leer los datos de la BD.
