@@ -1,7 +1,6 @@
 package com.ucreativa.presupuesto.entities;
 
 import com.ucreativa.presupuesto.repositories.FileRepository;
-import com.ucreativa.presupuesto.repositories.Repository;
 import com.ucreativa.presupuesto.services.PresupuestoService;
 import org.knowm.xchart.PieChart;
 import org.knowm.xchart.PieChartBuilder;
@@ -60,7 +59,7 @@ public class GeneradorDeGrafico {
             System.out.println("No existen transacciones almacenadas en la base de datos. No es posible generar el gráfico circular.");
 
             //Regresar al menú principal.
-            PresupuestoService oPresupuestoService = new PresupuestoService();
+            PresupuestoService oPresupuestoService = new PresupuestoService(new FileRepository());
             oPresupuestoService.inicializaMenuPrincipal();
         }
     }

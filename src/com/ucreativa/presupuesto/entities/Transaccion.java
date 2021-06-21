@@ -2,7 +2,7 @@ package com.ucreativa.presupuesto.entities;
 
 import java.util.Date;
 
-public class Transaccion {
+public abstract class Transaccion {
 
     //region Declaraciones de Atributos.
     private int id;

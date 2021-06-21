@@ -32,10 +32,6 @@ public class PresupuestoService {
     public PresupuestoService(Repository pRepository) {
         this.oRepository = pRepository;
     }
-
-    public PresupuestoService() {
-
-    }
     //endregion
 
     //region Metodos de la Clase
@@ -44,7 +40,7 @@ public class PresupuestoService {
         System.out.println();
         System.out.println("***** Menú Principal *****");
         System.out.println();
-        System.out.println("Ingrese cualquier número entre 1 y 6");
+        System.out.println("Ingrese cualquier número entre 1 y 5");
         System.out.println("1) Crear Ingreso");
         System.out.println("2) Crear Gasto");
         System.out.println("3) Generar Gráfico Circular");

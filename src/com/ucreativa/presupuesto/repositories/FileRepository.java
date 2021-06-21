@@ -1,6 +1,7 @@
 package com.ucreativa.presupuesto.repositories;
 
 import com.ucreativa.presupuesto.entities.*;
+import com.ucreativa.presupuesto.services.PresupuestoService;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -15,7 +16,7 @@ import java.util.List;
 public class FileRepository implements Repository{
 
     //Declarar las variables para almacenar la ruta del archivo.
-    final String sKey = "abc123ghidef9123";
+    private final String sKey = "abc123ghidef9123";
     private final Path root = Paths.get(".").normalize().toAbsolutePath();
     private final String FILE_PATH = root + "\\presupuestoDB.txt";
     private Ingreso oIngreso;
@@ -25,7 +26,6 @@ public class FileRepository implements Repository{
     public void guardarTransaccion(Transaccion pTransaccion)
     {
         try {
-
             //Declarar el contenido a guardar.
             String txtContent = "";
 
@@ -88,99 +88,105 @@ public class FileRepository implements Repository{
             bw.close();
 
         } catch (IOException e) {
-            //Imprimir excepción.
-            System.out.println(e);
+            System.out.println("Ocurrió un error al tratar de guardar el archivo de la base de datos: " + e.getMessage());
+        }
+        finally
+        {
+            //Regresar al menu principal de la aplicacion.
+            PresupuestoService oPresupuestoService = new PresupuestoService(new FileRepository());
+            oPresupuestoService.inicializaMenuPrincipal();
         }
     }
 
     @Override
     public List<Transaccion> leerDatos() {
 
+        Boolean lbOk = true;
+        String strError = "";
+
         //Declaración de la lista que va a contener todas las transacciones del archivo.
-        List<Transaccion> lstTransacciones = new ArrayList<Transaccion>();;
+        List<Transaccion> lstTransacciones = new ArrayList<Transaccion>();
 
         //Leer la BD.
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
 
             String sLine = "";
 
-            while ((sLine = br.readLine()) != null)
-            {
+            while ((sLine = br.readLine()) != null) {
+
                 //Desencriptar el string almacenado en el TXT para su lectura interna.
                 sLine = Encryptor.decrypt(sKey, "RandomInitVector", sLine);
 
                 List<String> aLine = new ArrayList<String>(Arrays.asList(sLine.split(",")));
 
-                if (aLine.get(2).equals(TipoTransaccion.INGRESO.toString()))
+                if (lbOk)
                 {
-                    try
-                    {
-                        Integer tmpId = Integer.parseInt(aLine.get(0));
-                        Date tmpFecha = new SimpleDateFormat("dd/MM/yyyy").parse(aLine.get(1));
-                        TipoTransaccion tmpTipoTransaccion = aLine.get(2).equals(TipoTransaccion.INGRESO.toString()) ? TipoTransaccion.INGRESO : TipoTransaccion.GASTO;
-                        TipoIngreso tmpTipoIngreso = aLine.get(3).equals(TipoIngreso.SALARIO.toString()) ? TipoIngreso.SALARIO : TipoIngreso.EXTRA;
-                        Double tmpMonto = Double.parseDouble(aLine.get(4));
-                        String tmpDescripcion = aLine.get(5);
+                    if (aLine.get(2).equals(TipoTransaccion.INGRESO.toString())) {
+                        try {
+                            Integer tmpId = Integer.parseInt(aLine.get(0));
+                            Date tmpFecha = new SimpleDateFormat("dd/MM/yyyy").parse(aLine.get(1));
+                            TipoTransaccion tmpTipoTransaccion = aLine.get(2).equals(TipoTransaccion.INGRESO.toString()) ? TipoTransaccion.INGRESO : TipoTransaccion.GASTO;
+                            TipoIngreso tmpTipoIngreso = aLine.get(3).equals(TipoIngreso.SALARIO.toString()) ? TipoIngreso.SALARIO : TipoIngreso.EXTRA;
+                            Double tmpMonto = Double.parseDouble(aLine.get(4));
+                            String tmpDescripcion = aLine.get(5);
 
-                        //Crear el objeto tipo Ingreso.
-                        Transaccion oTransaccion = new Ingreso(tmpId, tmpFecha, tmpTipoTransaccion, tmpTipoIngreso, tmpMonto, tmpDescripcion);
+                            //Crear el objeto tipo Ingreso.
+                            Transaccion oTransaccion = new Ingreso(tmpId, tmpFecha, tmpTipoTransaccion, tmpTipoIngreso, tmpMonto, tmpDescripcion);
 
-                        //Guardar el Ingreso a la lista.
-                        lstTransacciones.add(oTransaccion);
+                            //Guardar el Ingreso a la lista.
+                            lstTransacciones.add(oTransaccion);
 
-                    } catch (ParseException e) {
-                        //Imprimir excepción.
-                        System.out.println("Ocurrió un error al tratar de convertir los datos desde la BD: " + e);
+                        } catch (ParseException e) {
+                            lbOk = false;
+                            strError = "Ocurrió un error al tratar de realizar el parseo del ingreso: " + e.getMessage();
+                        }
+                    } else {
+                        try {
+                            Integer tmpId = Integer.parseInt(aLine.get(0));
+                            Date tmpFecha = new SimpleDateFormat("dd/MM/yyyy").parse(aLine.get(1));
+                            TipoTransaccion tmpTipoTransaccion = aLine.get(2).equals(TipoTransaccion.INGRESO.toString()) ? TipoTransaccion.INGRESO : TipoTransaccion.GASTO;
+
+                            //Inicializar el TipoGasto, después lo cambiamos al leer desde la BD.
+                            TipoGasto tmpTipoGasto = TipoGasto.PERSONAL;
+
+                            if (aLine.get(3).equals(TipoGasto.PERSONAL.toString())) {
+                                tmpTipoGasto = TipoGasto.PERSONAL;
+                            } else if (aLine.get(3).equals(TipoGasto.PRESTAMO.toString())) {
+                                tmpTipoGasto = TipoGasto.PRESTAMO;
+                            } else if (aLine.get(3).equals(TipoGasto.SERVICIO_PUBLICO.toString())) {
+                                tmpTipoGasto = TipoGasto.SERVICIO_PUBLICO;
+                            } else if (aLine.get(3).equals(TipoGasto.EDUCACION.toString())) {
+                                tmpTipoGasto = TipoGasto.EDUCACION;
+                            }
+
+                            Double tmpMonto = Double.parseDouble(aLine.get(4));
+                            String tmpDescripcion = aLine.get(5);
+
+                            //Crear el objeto tipo Gasto.
+                            Transaccion oTransaccion = new Gasto(tmpId, tmpFecha, tmpTipoTransaccion, tmpTipoGasto, tmpMonto, tmpDescripcion);
+
+                            //Guardar el Ingreso a la lista.
+                            lstTransacciones.add(oTransaccion);
+
+                        } catch (ParseException e) {
+                            lbOk = false;
+                            strError = "Ocurrió un error al tratar de realizar el parseo del gasto: " + e.getMessage();
+                        }
                     }
                 }
                 else
                 {
-                    try
-                    {
-                        Integer tmpId = Integer.parseInt(aLine.get(0));
-                        Date tmpFecha = new SimpleDateFormat("dd/MM/yyyy").parse(aLine.get(1));
-                        TipoTransaccion tmpTipoTransaccion = aLine.get(2).equals(TipoTransaccion.INGRESO.toString()) ? TipoTransaccion.INGRESO : TipoTransaccion.GASTO;
+                    System.out.println(strError);
 
-                        //Inicializar el TipoGasto, después lo cambiamos al leer desde la BD.
-                        TipoGasto tmpTipoGasto = TipoGasto.PERSONAL;
-
-                        if (aLine.get(3).equals(TipoGasto.PERSONAL.toString())){
-                            tmpTipoGasto = TipoGasto.PERSONAL;
-                        }
-
-                        else if (aLine.get(3).equals(TipoGasto.PRESTAMO.toString())){
-                            tmpTipoGasto = TipoGasto.PRESTAMO;
-                        }
-
-                        else if (aLine.get(3).equals(TipoGasto.SERVICIO_PUBLICO.toString())){
-                            tmpTipoGasto = TipoGasto.SERVICIO_PUBLICO;
-                        }
-
-                        else if (aLine.get(3).equals(TipoGasto.EDUCACION.toString())){
-                            tmpTipoGasto = TipoGasto.EDUCACION;
-                        }
-
-                        Double tmpMonto = Double.parseDouble(aLine.get(4));
-                        String tmpDescripcion = aLine.get(5);
-
-                        //Crear el objeto tipo Gasto.
-                        Transaccion oTransaccion = new Gasto(tmpId, tmpFecha, tmpTipoTransaccion, tmpTipoGasto, tmpMonto, tmpDescripcion);
-
-                        //Guardar el Ingreso a la lista.
-                        lstTransacciones.add(oTransaccion);
-
-                    } catch (ParseException e) {
-                        //Imprimir excepción.
-                        System.out.println("Ocurrió un error al tratar de convertir los datos desde la BD: " + e);
-                    }
+                    //Regresar al menu principal de la aplicacion.
+                    PresupuestoService oPresupuestoService = new PresupuestoService(new FileRepository());
+                    oPresupuestoService.inicializaMenuPrincipal();
                 }
             }
-
         } catch (IOException e) {
-            //Imprimir excepción.
-            System.out.println(e);
+            System.out.println("Ocurrió un error al tratar de leer el archivo de la base de datos: " + e.getMessage());
         }
-        
+
         return lstTransacciones;
     }
 }
